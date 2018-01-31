@@ -1,7 +1,7 @@
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var dbConnection =require('./mongoDbConnection');
+var mongoDbConnection = require('./mongoDbConnection');
 var app = express();
 
 
@@ -37,7 +37,7 @@ app.post('/userLogin', function(req,res){
 	console.log(upassword);
 	console.log(userSession);
 
-	var con = connect.mongoDbConnection.dbConnection();
+	var con = mongoDbConnection.dbConnection();
 	con.connect(function(err){
 		if(err){
 			throw err;
