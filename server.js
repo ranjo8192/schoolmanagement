@@ -1,7 +1,10 @@
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var mongoDbConnection = require('./mongoDbConnection');
+var mongoDbConnection =require('./mongoDbConnection');
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
+var url = "mongodb://localhost:27017/mydb";
 var app = express();
 
 
@@ -37,19 +40,20 @@ app.post('/userLogin', function(req,res){
 	console.log(upassword);
 	console.log(userSession);
 
-	var con = mongoDbConnection.dbConnection();
-	con.connect(function(err){
-		if(err){
-			throw err;
-		}
-		else {
-			console.log("connection is imported successfully");
-			res.end();
-		}
-	})
+MongoClient.connect(url , function(err, db){
+	if(err){
+		throw err;
+	}
+	else {
 
+		console.log("Hey Connection with mongo db has been created successfully..CHeers!!!");
+		console.log(db);
+		
+	}
+})
 	
 });
+
 /*****************Login Ends*****************************/
 app.get('/register', function(req, res){
 	res.render('pages/register');
