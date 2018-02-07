@@ -46,8 +46,19 @@ MongoClient.connect(url , function(err, db){
 	}
 	else {
 
-		console.log("Hey Connection with mongo db has been created successfully..CHeers!!!");
-		console.log(db);
+		db.collection('users', function(err , collection){
+			if(err){
+				throw err;
+			}
+			else {
+				console.log(collection);
+				collection.find();
+				res.end();
+			}
+		});
+		// console.log("Hey Connection with mongo db has been created successfully..CHeers!!!");
+		// console.log(db);
+		// res.end();
 		
 	}
 })
