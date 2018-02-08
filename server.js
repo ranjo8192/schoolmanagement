@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var mongoDbConnection =require('./mongoDbConnection');
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var url = "mongodb://localhost:27017/mydb";
+var url = "mongodb://localhost:27017/";
 var app = express();
 
 
@@ -38,22 +38,33 @@ app.post('/userLogin', function(req,res){
 	upassword = req.body.password;
 	console.log(username);
 	console.log(upassword);
-	console.log(userSession);
+	//console.log(userSession);
 
-MongoClient.connect(url , function(err, db){
+MongoClient.connect(url , function(err, client){
 	if(err){
 		throw err;
 	}
 	else {
-
-		db.collection('users', function(err , collection){
+		var db = client.db('mydb');
+		db.collection('users').find({'email':username}).toArray(function(err , result){
 			if(err){
 				throw err;
+
 			}
 			else {
-				console.log(collection);
-				collection.find();
-				res.end();
+				console.log(result.length);
+				if(result.length == 0){
+					console.log("Username Does not exists..");
+					res.end();
+				}
+				else{
+				console.log("Your entries is correct..We matched you & rediecting to the dashboard!");	
+				console.log(result[0].email);
+				client.close();
+				res.end();	
+				}
+
+				
 			}
 		});
 		// console.log("Hey Connection with mongo db has been created successfully..CHeers!!!");
