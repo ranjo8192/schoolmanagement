@@ -34,8 +34,8 @@ app.get('/', function(req, res){
 /*****************Login Starts***************************/
 app.post('/userLogin', function(req,res){
 	var userSession = req.session;
-	username = req.body.username;
-	upassword = req.body.password;
+	var username = req.body.username;
+	var upassword = req.body.password;
 	console.log(username);
 	console.log(upassword);
 	//console.log(userSession);
@@ -61,7 +61,7 @@ MongoClient.connect(url , function(err, client){
 				console.log("Your entries is correct..We matched you & rediecting to the dashboard!");	
 				console.log(result[0].email);
 				client.close();
-				res.end();	
+				res.render('pages/index');	
 				}
 
 				
@@ -72,13 +72,65 @@ MongoClient.connect(url , function(err, client){
 		// res.end();
 		
 	}
-})
+});
 	
 });
 
 /*****************Login Ends*****************************/
 app.get('/register', function(req, res){
 	res.render('pages/register');
+});
+
+/****************User Registration************************/
+app.post('/userRegistration', function(req, res){
+	var userSession = req.session;
+	var userName = req.body.username;
+	var userId = req.body.email;
+	var userType = req.body.usertype;
+	var uPassword = req.body.password;
+	var confmuPassword = req.body.confmupassword;
+
+	console.log(userName+" "+userId+" "+userType+" "+uPassword+" "+confmuPassword);
+	res.end();
+
+	MongoClient.connect(url , function(err, client){
+	if(err){
+		throw err;
+	}
+	else {
+		var db = client.db('mydb');
+		var newuser = {user_name: userName, email: userId, user_type: userType, user_password: uPassword};
+
+		db.collection('users').insert(newuser, function(err , response){
+			if(err){
+				throw err;
+
+			}
+			else {
+				console.log(response);
+				console.log("New User addedd successfully..!");
+				res.end();
+				// if(result.length == 0){
+				// 	console.log("Username Does not exists..");
+				// 	res.end();
+				// }
+				// else{
+				// console.log("Your entries is correct..We matched you & rediecting to the dashboard!");	
+				// console.log(result[0].email);
+				// client.close();
+				// res.render('pages/index');	
+				// }
+
+				
+			}
+		});
+		// console.log("Hey Connection with mongo db has been created successfully..CHeers!!!");
+		// console.log(db);
+		// res.end();
+		
+	}
+});
+
 });
 
 
