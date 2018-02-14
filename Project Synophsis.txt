@@ -1,0 +1,12 @@
+Login
+Admin Dashboard
+Logout
+Register User
+Edit User Profile
+Setup Masteres
+1. Setup Organization
+	1. Name
+	2. Address
+	3. Contact Details
+2. Edit Organization
+	
