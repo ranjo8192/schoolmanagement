@@ -28,7 +28,14 @@ var userSession;
 
 
 app.get('/', function(req, res){
-	res.render('pages/login');
+	userSession = req.session;
+	if(userSession == ""){
+		res.render('pages/login');
+	}
+	else {
+		res.render('pages/index');
+	}
+	
 });
 
 /*****************Login Starts***************************/
@@ -46,7 +53,7 @@ MongoClient.connect(url , function(err, client){
 	}
 	else {
 		var db = client.db('mydb');
-		db.collection('users').find({'email':username}).toArray(function(err , result){
+		db.collection('users').find({'email':username,'password':upassword}).toArray(function(err , result){
 			if(err){
 				throw err;
 
@@ -75,6 +82,23 @@ MongoClient.connect(url , function(err, client){
 });
 	
 });
+
+/*****************Start User Logout ***********************/
+app.get('/userLogout', function(req, res){
+	userSession = req.session;
+
+	req.session.destroy(function(err){
+		if(err){
+			throw err;
+		}
+		else {
+			console.log("successfully Logout, Now redirecting to the login page..");
+			res.render('pages/login');
+			res.end();
+		}
+	});
+});
+/*****************End User Logout *************************/
 
 /*****************Login Ends*****************************/
 app.get('/register', function(req, res){
