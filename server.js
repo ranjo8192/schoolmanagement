@@ -29,11 +29,14 @@ var userSession;
 
 app.get('/', function(req, res){
 	userSession = req.session;
-	if(userSession == ""){
-		res.render('pages/login');
+	console.log(userSession.username);
+	res.end();
+	if(userSession.username){
+		console.log(userSession.username);
+		res.render('pages/index');
 	}
 	else {
-		res.render('pages/index');
+		res.render('pages/login');
 	}
 	
 });
@@ -43,6 +46,7 @@ app.post('/userLogin', function(req,res){
 	var userSession = req.session;
 	var username = req.body.username;
 	var upassword = req.body.password;
+	userSession.username = req.body.username;
 	console.log(username);
 	console.log(upassword);
 	//console.log(userSession);
@@ -53,7 +57,7 @@ MongoClient.connect(url , function(err, client){
 	}
 	else {
 		var db = client.db('mydb');
-		db.collection('users').find({'email':username,'password':upassword}).toArray(function(err , result){
+		db.collection('users').find({'email':username,'user_password':upassword}).toArray(function(err , result){
 			if(err){
 				throw err;
 
@@ -62,13 +66,19 @@ MongoClient.connect(url , function(err, client){
 				console.log(result.length);
 				if(result.length == 0){
 					console.log("Username Does not exists..");
+					res.render('pages/login');
 					res.end();
 				}
 				else{
 				console.log("Your entries is correct..We matched you & rediecting to the dashboard!");	
 				console.log(result[0].email);
+				console.log(result[0].user_password);
+				//userSession = username;
+				username = userSession.username;
+				console.log(username);
+				res.render('pages/index', {username});
 				client.close();
-				res.render('pages/index');	
+					
 				}
 
 				
@@ -133,6 +143,7 @@ app.post('/userRegistration', function(req, res){
 			else {
 				console.log(response);
 				console.log("New User addedd successfully..!");
+				res.render('pages/login');
 				res.end();
 				// if(result.length == 0){
 				// 	console.log("Username Does not exists..");
