@@ -9,4 +9,11 @@ Setup Masteres
 	2. Address
 	3. Contact Details
 2. Edit Organization
+
+
+For my Learning ....
+
+A) parseInt()
+B) Promise()
+C) Asynchronous task.
 	
