@@ -29,10 +29,10 @@ var userSession;
 
 app.get('/', function(req, res){
 	userSession = req.session;
-	console.log(userSession.username);
-	res.end();
+	console.log("check post first::" +userSession.username);
+	//res.end();
 	if(userSession.username){
-		console.log(userSession.username);
+		console.log("Check post at root for user name:::::" +userSession.username);
 		res.render('pages/index');
 	}
 	else {
